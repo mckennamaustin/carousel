@@ -46,10 +46,27 @@ export default class Carousel extends Component {
   };
 
   toggleFullscreen = () => {
-    this.setState({
-      isFullscreen: !this.state.isFullscreen,
-      isShowingThumbnails: false
-    });
+    this.setState(
+      {
+        isFullscreen: !this.state.isFullscreen,
+        isShowingThumbnails: false
+      },
+      () => {
+        if (this.state.isFullscreen) {
+          window.addEventListener('keydown', this.handleKeyboard);
+        } else {
+          window.removeEventListener('keydown', this.handleKeyboard);
+        }
+      }
+    );
+  };
+
+  handleKeyboard = evt => {
+    if (evt.keyCode === 37) {
+      this.decrementIndex();
+    } else if (evt.keyCode === 39) {
+      this.incrementIndex();
+    }
   };
 
   toggleThumbnails = () => {
