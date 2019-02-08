@@ -6,6 +6,14 @@ const DRAG_TOLERANCE = 10;
 const THUMBNAIL_WIDTH_PCT = 15;
 const PRESENT_ON_SCREEN = Math.floor(100 / THUMBNAIL_WIDTH_PCT);
 
+function clientXFromEvent(evt) {
+  if (evt.touches.length >= 0) {
+    return evt.touches[0].clientX;
+  }
+
+  return evt.clientX;
+}
+
 export default class ThumbnailReel extends Component {
   state = {
     isDragging: false,
@@ -100,7 +108,7 @@ export default class ThumbnailReel extends Component {
   };
 
   startDrag = evt => {
-    this.setState({ isDragging: true, startDragX: evt.clientX });
+    this.setState({ isDragging: true, startDragX: clientXFromEvent(evt) });
   };
 
   cancelDrag = evt => {
@@ -115,7 +123,7 @@ export default class ThumbnailReel extends Component {
 
   handleDrag = evt => {
     if (this.state.isDragging) {
-      const dragX = evt.clientX - this.state.startDragX;
+      const dragX = clientXFromEvent(evt) - this.state.startDragX;
       this.setState({ dragX });
       this.updateBalance();
     }
@@ -209,12 +217,13 @@ export default class ThumbnailReel extends Component {
             id: `ev-thindex-${this.state.balancedIndices[index]}`,
             className,
             mouseDown: evt => {
-              this.setState({ clientXOnSelection: evt.clientX });
+              this.setState({ clientXOnSelection: clientXFromEvent(evt) });
             },
             mouseUp: evt => {
               if (
-                Math.abs(this.state.clientXOnSelection - evt.clientX) <=
-                DRAG_TOLERANCE
+                Math.abs(
+                  this.state.clientXOnSelection - clientXFromEvent(evt)
+                ) <= DRAG_TOLERANCE
               ) {
                 this.goToIndex(this.state.balancedIndices[index]);
               }
