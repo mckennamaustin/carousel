@@ -7,7 +7,7 @@ const THUMBNAIL_WIDTH_PCT = 15;
 const PRESENT_ON_SCREEN = Math.floor(100 / THUMBNAIL_WIDTH_PCT);
 
 function clientXFromEvent(evt) {
-  if (evt.touches.length >= 0) {
+  if (evt.touches && evt.touches.length >= 0) {
     return evt.touches[0].clientX;
   }
 
